@@ -1,0 +1,8 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "repository": "https://github.com/Grupo-Hygea-Saude/test-full-stack",
+  "author": "Diego Jimenes",
+  "license": "MIT"
+}
