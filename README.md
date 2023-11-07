@@ -14,11 +14,18 @@ yarn dev
 ```
 
 #### Requisitos para o teste
-- Docker
-- Node.js
-- TypeOrm
-- Mysql
-- React.js ou React Native
+- Um front-end desenvolvido em Next.js ou React Native, incorporando as seguintes funcionalidades:
+    - Listagem de usuarios
+    - Criação de usuarios
+    - Exclusão de usuarios
+    - Edição de usuarios
+
+- A implementação dos seguintes endpoints na API já existente:
+    - GET - user/list
+    - GET - user/:id
+    - POST - user/create
+    - DELETE - user/delete/:id
+    - PUT - user/:id/edit
 
 #### Pontos que serão avaliados
 - Organização
