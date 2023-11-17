@@ -17,21 +17,24 @@ type UsersResponse = {
 }
 
 const getAll = async (limit: number, offset: number): Promise<UsersResponse> => {
-  const users = await userRepository.find()
+  const users = await userRepository.find({
+    order: {
+      created_at: 'DESC'
+    },
+})
 
-  const startIndex = (offset - 1) * limit;
-  const endIndex = offset * limit;
+  const startIndex = offset * limit;
+  const endIndex = (offset + 1) * limit;
     
   const totalPages = Math.ceil(users.length / limit);
 
-  
   const pagination: Pagination = { next: 0, previous: undefined } 
   
   if (endIndex < users.length) {
     pagination.next = offset + 1;
   }
   
-  if (startIndex > 1) {
+  if (startIndex > 0) {
     pagination.previous = offset - 1;
   } 
 
@@ -40,10 +43,16 @@ const getAll = async (limit: number, offset: number): Promise<UsersResponse> => 
   return ({ users: paginatedUsers, pagination, totalPages });
 }
 
-const getOne = async (id: number): Promise<IUser | []> => {
+const getOne = async (id: number): Promise<IUser | {}> => {
   const user = await userRepository.findOneBy({ id })
 
-  return user?.id ? user : []
+  return user?.id ? user : {}
+}
+
+const getOneByEmail = async (email: string): Promise<IUser | {}> => {
+  const user = await userRepository.findOneBy({ email })
+
+  return user?.id ? user : {}
 }
 
 const createOne = async (user: IUser): Promise<IUser> => {
@@ -72,4 +81,4 @@ const deleteOne = async (id: number): Promise<DeleteResult>  => {
   return result
 }
 
-export default { getAll, getOne, createOne, updateOne, deleteOne }
+export default { getAll, getOne, getOneByEmail, createOne, updateOne, deleteOne }
