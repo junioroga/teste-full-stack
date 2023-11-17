@@ -1,35 +1,31 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { DataSource } from 'typeorm'
+import cors from 'cors'
 
-import entities from "./entities"
+import { AppDataSource } from './database/data-source'
+import routers from './routes/routes'
 
 const app = express()
 
 const port = 3001
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(routers)
 
-export const database = new DataSource({
-    type: "mysql",
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: 'root',
-    database: "teste-db",
-    entities: entities,
-    migrations: [__dirname + "/migrations/*.ts"]
-})
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to API" });
+});
 
 app.listen(port, async () => {
-    try {
-        console.log(`server run in port = ${port}`)
-        await database.initialize()
-        console.log('data base running')
-        await database.runMigrations()
-        console.log('migrations finished')
-    } catch (err) {
-        console.log(err)
-    }
+  try {
+    await AppDataSource.initialize()
+    console.log('Database OK!')
+    await AppDataSource.runMigrations()
+    console.log('Migrations finished!')
+    console.info(`🚀 Server ready at http://localhost:${port}`)
+  } catch (err) {
+    console.log(err)
+  }
 })
